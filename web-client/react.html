@@ -30,6 +30,26 @@
                     });
                 });
             }
+            let add_user = async (email, cb) => {
+                let axiosConfig = {
+                    headers: {
+                        'content-Type': 'application/json;charset=UFT-8', 'Access-Control-Allow-Origin': '*'  
+                    }
+                }
+                let params ={
+                    email: email
+                }
+                let res = await axios.post("/add_user", params, axiosConfig);
+                if(res){
+                    console.log(res.data);
+                    if(res.data.result === 1 || res.data.result === 0){
+                        cb(true);
+                    } else{
+                        console.error('Something wrong.');
+                        cb(false);
+                    }
+                }
+            }
             </script>
             <script>
                 function onSignIn(googleUser){
@@ -38,51 +58,64 @@
                     console.log('Namame: '+ profile.getName());
                     console.log('Image URL: '+ profile.getImageUrl());
                     console.log('Email: ' + profile.getEmail());
+                    add_user(profile.getEmail(),(result) =>{
+                        if(result === true) {
+                            onMainPage(profile.getName());
+                        } else{
+
+                        }
+                    });
+                }
+                function onSignOut() {
+                    let auth2 = gapi.auth2.getAuthInstance();
+                    auth2.signOut().then(() => {
+                        console.log('User signed out.');
+                        window.location.href ='http://localhost';
+                    });
+                    auth2.disconnect();
+                    alert("Good bye sir!");
                 }
             </script>
             <script type="text/babel">
-            // const {
-            //     Button
-               
-            // } = MaterialUI;
-            
-            // let reqSum = async(param1, param2) =>{
-            //     console.log(`param1: ${param1}, param2: ${param2}`);
-            //     //axios.defaults.baseURL ='localhost';
-            //     let axiosConfig = {
-            //         headers: {
-            //             'Content-Type': 'application/json;charset=UTF-8', 'Access-Control-Allow-Origin': '*'
-            //         }
-            //     }
-            //     let params ={
-            //         param1: param1,
-            //         param2: param2
-            //     }
-            //     let res = await axios.post("/sum", params, axiosConfig);
-            //     if(res){
-            //         console.log(res.data.sum);
-            //     }
-            // }
+            const {
+                Button,
+                Card,
+                CardContent,
+                Typography             
+            } = MaterialUI;
 
-            // let onLoginClick=function(){
-            //     // console.log('signed-in');
-            //     reqSum(Math.random(), Math.random());
-            // }
-                        
-            // let App = (props) =>{
-            //     return (<div>
-            //             <Button
-            //                 variant="contained"
-            //                 onClick={onLoginClick}>
-            //                 Google Login
-            //             </Button>
-            //         </div>
-
-            //     );
-            // };
+            const useStyle = {
+                card: {
+                    minWith: 275
+                },
+                title: {
+                    fontSize: 14
+                }
+            }
+            function onSignOutClick(){
+                onSignOut();
+            };
+           
+            function onMainPage(txt_user_name){
+                let App = (props) => {
+                    return(
+                        <Card className={useStyle.card}>
+                            <CardContent>
+                                <Typography className ={useStyle.title} color="textSecondary" gutterBottom>
+                                    User name: {txt_user_name}
+                                </Typography>
+                                    Hello, sir. What can I do for U?
+                            </CardContent>
+                            <Button variant="contained"
+                                onClick={onSignOutClick}>
+                                Sign-Out
+                            </Button>
+                        </Card>
+                    );
+                };
+                ReactDOM.render(<App/>, document.getElementById('root'));
+            };
         
-            // ReactDOM.render(<App/>, document.getElementById('root'));
-
             </script>
             <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>  
     </body>
