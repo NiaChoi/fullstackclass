@@ -12,7 +12,8 @@
     </head>
     <body>
         <div id="root">
-        <div class="g-signin2" data-onsuccess="onGoogleSignIn"></div>
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <!-- button -->
         </div>
         <script>
             function init() {
@@ -33,10 +34,10 @@
             <script>
                 function onSignIn(googleUser){
                     var profile = googleUser.getBasicProfile();
-                    console.log('ID: '+profile.getID());
-                    console.log('Namame: '+profile.getName());
-                    console.log('Image URL: '+profile.getImageUrl());
-                    console.log('Email: ' +profile.getEmail());
+                    console.log('ID: '+ profile.getId());
+                    console.log('Namame: '+ profile.getName());
+                    console.log('Image URL: '+ profile.getImageUrl());
+                    console.log('Email: ' + profile.getEmail());
                 }
             </script>
             <script type="text/babel">
